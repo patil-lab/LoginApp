@@ -3,32 +3,16 @@ module.exports = (sequelize, DataTypes) => {
     "User",
     {
       firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
+        type: DataTypes.STRING
       },
       lastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
+        type: DataTypes.STRING
       },
       email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
+        type: DataTypes.STRING
       },
       password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: true,
-        },
+        type: DataTypes.STRING
       },
       isVerified: {
         type: DataTypes.BOOLEAN,
@@ -37,12 +21,13 @@ module.exports = (sequelize, DataTypes) => {
       token: {
         type: DataTypes.STRING,
       },
+      socialUserId:DataTypes.STRING,
+      registrationType:DataTypes.ENUM("email","google","facebook")
     },
-    {
-      tableName: "User",
-    },
-    { freezeTableName: true, timestamps: false }
-  );
+   {freezeTableName:true}
+
+
+  ).sync();
 
   return User;
 };

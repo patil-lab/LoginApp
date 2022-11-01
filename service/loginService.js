@@ -1,12 +1,15 @@
+"use strict"
+
 const bcrypt = require("bcrypt");
 var db = require("../models/database");
 const User = db.User;
 const crypto = require("crypto");
 const sgMail = require("@sendgrid/mail");
 const passport = require('passport');
+require('dotenv').config()
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-module.exports = async function createUser(req, res) {
+var session;
+async function createUser(req, res) {
   try {
     const { firstName, lastName, email, password, confirm } = req.body;
     let errors = [];
@@ -92,7 +95,7 @@ module.exports = async function createUser(req, res) {
   }
 };
 
-module.exports = async function verifyUser(req, res) {
+async function verifyUser(req, res) {
   try {
     const user = await User.findOne({ where: { token: req.query.token } });
     if (!user) {
@@ -118,12 +121,22 @@ module.exports = async function verifyUser(req, res) {
   }
 };
 
-module.exports = async function loginUserPost(req, res, next) {
+async function loginUserPost(req, res, next) {
   passport.authenticate("local", {
     successRedirect: "/dashboard",
     failureRedirect:'/login',
-    failureFlash:true
+    failureFlash: true
     
   })(req,res,next);
 };
 
+async function logoutUserPost(req,res,next){
+  console.log(req.session)
+  req.logOut()
+  res.redirect('/login')
+}
+
+
+
+
+module.exports={createUser,verifyUser,loginUserPost,logoutUserPost}

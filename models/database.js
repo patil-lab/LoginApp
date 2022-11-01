@@ -5,11 +5,19 @@ const sequelize = new Sequelize("logindb", "root", "root", {
   dialect: "mysql",
 });
 
-const db = {};
+const db = {
+  User: require('../models/User.js')
+};
+
+Object.keys(db).forEach(modelName => {
+  if ("associate" in db[modelName]) {
+    db[modelName].associate(db);
+  }
+});
+
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.User = require("./User.js")(sequelize, DataTypes);
 
 module.exports = db;

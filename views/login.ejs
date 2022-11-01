@@ -1,4 +1,6 @@
 <h1>Login</h1>
+<div><%=errors%></div>
+<div><%=message%></div>
 
 <form action="/login" method="POST">
 <div>
@@ -10,5 +12,10 @@
     <input type="password" id="password" name="password" required>
 </div>
 <button type="submit">Sign In</button>
+<br/>
+      <p>or</p>
+      <a href="/auth/facebook">Signup via Facebook</a>
+      <br/><br/>
+      <a href="/auth/google">Signup via Google</a>
 </form>
 <a href="/register">Sign Up</a>

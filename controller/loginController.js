@@ -1,8 +1,13 @@
+"use strict"
+
 const express = require("express");
 const app = express();
-const createUser = require("../service/loginService");
-const verifyUser = require("../service/loginService");
-const loginUserPost = require("../service/loginService");
+const createUser = require("../service/loginService").createUser;
+const verifyUser = require("../service/loginService").verifyUser;
+const loginUserPost = require("../service/loginService").loginUserPost;
+const logoutUserPost = require("../service/loginService").logoutUserPost;
+const {ensureAuthenticated,forwardAuthenticated}=require('../config/auth')
+
 
 /**
  * 
@@ -17,13 +22,13 @@ const loginView = (req, res) => {
   res.render("login.ejs", {});
 };
 
-const homePageView = (req, res) => {
+const homePageView =(forwardAuthenticated, (req, res) => {
   res.render("landing.ejs", {});
-};
+});
 
-const dashboardView = (req, res) => {
-  res.render("dashboard.ejs", {});
-};
+const dashboardView =( ensureAuthenticated,(req, res) => {
+  res.render("dashboard.ejs", {user : req.user});
+});
 const registerUser = async (req, res) => {
   await createUser(req, res);
 };
@@ -32,9 +37,13 @@ const verifyEmail = async (req, res) => {
   await verifyUser(req, res);
 };
 
-const loginUser = async (req, res, next) => {
-  await loginUserPost(req, res, next);
+const loginUser = async (req, res) => {
+  await loginUserPost(req, res);
 };
+
+const logoutUser=async(req,res)=>{
+  await logoutUserPost(req,res)
+}
 
 module.exports = {
   registerView,
@@ -44,4 +53,6 @@ module.exports = {
   homePageView,
   dashboardView,
   loginUser,
+  logoutUser
+  
 };

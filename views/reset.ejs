@@ -1,0 +1,21 @@
+<h1>Hey  <%=user.firstName %> ! Please reset your password</h1>
+
+<div>
+    <%=message%>
+</div>
+<form action="/reset" method="POST">
+    <div>
+        <label for="name">Old Password</label>
+        <input type="password" id="oldPwd" name="oldPwd" required>
+    </div>
+    <div>
+        <label for="name">New Password</label>
+        <input type="password" id="newPwd" name="newPwd" required>
+    </div>
+    <div>
+        <label for="name">Re-enter New Password</label>
+        <input type="password" id="rPwd" name="rPwd" required>
+    </div>
+    
+    <button type="submit">Reset Password</button>
+    </form>

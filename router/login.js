@@ -7,17 +7,20 @@ const {
   registerUser,
   verifyEmail,
   homePageView,
-  dashboardView,
   loginUser,
-  logoutUser
+  logoutUser,
+  resetView,
+  resetPost,
+  setPasswordView,
+  setPasswordPost
 } = require("../controller/loginController");
-const ensureAuthenticated=require('../config/auth').ensureAuthenticated
+const {ensureAuthenticated,forwardAuthenticated}=require('../config/auth')
 const router = express.Router();
 
-router.get("/", homePageView);
-router.get("/register", registerView);
-router.get("/login", loginView);
-
+router.get("/", forwardAuthenticated,homePageView);
+router.get("/register",forwardAuthenticated, registerView);
+router.get("/login", forwardAuthenticated,loginView);
+router.get("/reset",ensureAuthenticated,resetView)
 router.post("/register", registerUser);
 router.get("/verify", verifyEmail);
 router.get("/dashboard", ensureAuthenticated,(req, res) => {
@@ -28,11 +31,9 @@ router.post("/login", loginUser);
 router.get('/auth/google', 
 passport.authenticate('google', { scope : ['profile', 'email'] }));
 router.get('/auth/google/callback', 
-passport.authenticate('google', { failureRedirect: '/error', failureMessage: true }),
-function(req, res) {
-  // Successful authentication, redirect success.
-  res.redirect('/dashboard');
-});
+passport.authenticate('google', { 
+  failureRedirect: '/login',successRedirect: '/dashboard', 
+  failureMessage: true }));
 
 //Facebook Oauth
 router.get('/auth/facebook', passport.authenticate('facebook', {
@@ -47,3 +48,9 @@ router.get('/auth/facebook/callback',
 
   router.get('/logout',logoutUser)
 module.exports = router;
+
+router.post("/reset",resetPost)
+
+router.get('/setPassword',setPasswordView)
+
+router.post('/setPassword',setPasswordPost)

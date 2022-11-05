@@ -1,6 +1,27 @@
 <h1>Welcome <%=user.firstName %></h1>
-
 <div>
-    <a href="/logout">Sign Out</a>
+    <%=message%>
 </div>
-<div>
+
+<form action="/reset" method="GET">
+  
+        <ul class="navbar-nav mr-auto mx-auto">
+            <li class="nav-item">
+                <a href="/reset">ReSet Password</a>
+            </li>
+        </ul>
+  
+    
+    
+    </form>
+
+    <form action="/setPassword" method="GET">
+        <ul class="navbar-nav mr-auto mx-auto">
+            <li class="nav-item">
+                <a href="/setPassword">Set Password</a>
+            </li>
+        </ul>
+        </form>
+    <div>
+        <a href="/logout">Sign Out</a>
+    </div>

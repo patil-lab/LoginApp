@@ -1,31 +1,52 @@
+const { v4: uuidv4 } = require('uuid');
 const express = require("express");
 const cookieParser=require('cookie-parser')
 const session = require("express-session");
 const path = require("path");
 const app = express();
-require('https').globalAgent.options.rejectUnauthorized = false;
+const bodyParser = require("body-parser");
+const MySQLStore=require('express-mysql-session')(session)
 const flash = require("connect-flash");
-const db = require("./models/database");
-const User = require("./models/User");
-
 const passport = require("passport");
 
-app.use(cookieParser())
 app.set("views", path.join(__dirname, "views"));
 app.set("view-engine", "ejs");
+app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false })); 
+//app.use(express.urlencoded({ extended: false }));
+const env = process.env.NODE_ENV || 'development';
+const config = require('./config/config.json')[env];
 const { loginCheck } = require("./config/passport-config");
 loginCheck(passport);
+
+var options ={
+  host:'localhost',
+  port:3306,
+  user:'root',
+  password:'root',
+  database:'logindb'
+}
+app.use(cookieParser("LoginAppSecret"))
 const oneYear=1000*60*60*24*365
+const sessionStore=new MySQLStore(options)
 app.use(
   session({
-    secret: "flashblog",
-    saveUninitialized: true,
+    genid: (req) => {
+      console.log('Inside the session middleware')
+      console.log(req.sessionID)
+      return uuidv4(); // use UUIDs for session IDs
+    },
+    key:'session_cookie_name',
+    store:sessionStore,
+    secret: "LoginAppSecret",
+    saveUninitialized: false,
     resave: false,
-    cookie: {maxAge:oneYear}
+    cookie: {maxAge:oneYear,httpOnly:true}
   })
 );
+
+
 
 app.use(flash());
 app.use(function (request, response, next) {
@@ -49,8 +70,8 @@ app.use("/", require("./router/login"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-db.sequelize.sync({force:true}).then((req) => {
+
   app.listen(port,"localhost", () => {
     console.log(" Server running!!");
   });
-});
+

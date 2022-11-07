@@ -144,9 +144,9 @@ async function loginUserPost(req, res, next) {
     if (err) { return next(err); }
     if (!user) { return res.send("-1"); }
     //req.login calls passport.serialize user
-    req.user = user;// remove if unwanted
+    //req.user = user;// remove if unwanted
     req.login(user, function(err) {
-      req.session.save // remove if unwanted
+      //req.session.save // remove if unwanted
       console.log('Inside req.login() callback')
       console.log(`req.session.passport: ${JSON.stringify(req.session.passport)}`)
       console.log(`req.user: ${JSON.stringify(req.user)}`)

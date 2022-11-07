@@ -1,9 +1,11 @@
 module.exports = {
     ensureAuthenticated: function(req, res, next) {
         if (req.isAuthenticated()) {
+            console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
             console.log(req.session+"is authenticated")
             return next();
         }
+        console.log(`req.session.passport.user: ${JSON.stringify(req.session.passport)}`);
         console.log(req.session+"not authenticated")
         req.flash('message', 'Please log in to view that resource');
         res.redirect('/');

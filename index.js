@@ -1,3 +1,5 @@
+
+var https = require('https');
 const { v4: uuidv4 } = require('uuid');
 const express = require("express");
 const cookieParser=require('cookie-parser')
@@ -8,17 +10,18 @@ const bodyParser = require("body-parser");
 const MySQLStore=require('express-mysql-session')(session)
 const flash = require("connect-flash");
 const passport = require("passport");
+require('dotenv').config()
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view-engine", "ejs");
-app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'views/public')))
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false })); 
-//app.use(express.urlencoded({ extended: false }));
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config/config.json')[env];
+console.log(process.env.NODE_ENV)
 const { loginCheck } = require("./config/passport-config");
-loginCheck(passport);
+
 
 var options ={
   host:'localhost',
@@ -42,7 +45,7 @@ app.use(
     secret: "LoginAppSecret",
     saveUninitialized: false,
     resave: false,
-    cookie: {maxAge:oneYear,httpOnly:true}
+    //cookie: {maxAge:oneYear,httpOnly:true}
   })
 );
 
@@ -59,6 +62,7 @@ app.use(function (request, response, next) {
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+loginCheck(passport);
 
 const port = 3000;
 
@@ -71,7 +75,11 @@ app.use("/", require("./router/login"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
-  app.listen(port,"localhost", () => {
-    console.log(" Server running!!");
-  });
+  if(process.env.NODE_ENV=='production'){
+    https.createServer(options, app).listen(port);
+  }else{
+    app.listen(port,"localhost", () => {
+      console.log(" Server running!!");
+    });
+  }
 

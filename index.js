@@ -64,8 +64,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 loginCheck(passport);
 
-const port = 3000;
-
 const swaggerUi = require("swagger-ui-express"),
   swaggerDocument = require("./swagger/swagger");
 
@@ -76,10 +74,11 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
   if(process.env.NODE_ENV=='production'){
-    https.createServer(options, app).listen(port);
+    app.listen(process.env.PORT, "0.0.0.0", function() {
+      console.log("Server started.......");
+    });
   }else{
     app.listen(process.env.PORT,"localhost", () => {
-      console.log(process.env.GOOGLE_CLIENT_ID)
       console.log(" Server running!!");
     });
   }

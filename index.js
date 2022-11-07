@@ -19,16 +19,27 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false })); 
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config/config.json')[env];
-console.log(process.env.NODE_ENV)
+console.log(config)
 const { loginCheck } = require("./config/passport-config");
 
+var options
 
-var options ={
+if(env=='development'){
+ options ={
   host:'localhost',
   port:3306,
   user:'root',
   password:'root',
   database:'logindb'
+}
+}else{
+  options ={
+    host:'us-cdbr-east-06.cleardb.net',
+    port:3306,
+    user:'b32e8159690508',
+    password:'01ad9d40',
+    database:'heroku_52a1aff1bb1bbdf'
+  }
 }
 app.use(cookieParser("LoginAppSecret"))
 const oneYear=1000*60*60*24*365

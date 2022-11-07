@@ -21,10 +21,13 @@
     }
   },
   "production": {
-    "username": "root",
-    "password": null,
+    "username": "b32e8159690508",
+    "password": "01ad9d40",
     "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "host": "us-cdbr-east-06.cleardb.net",
+    "dialect": "mysql",
+    "define":{
+      "freezeTableName":true
+    }
   }
 }

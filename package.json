@@ -44,5 +44,9 @@
   "devDependencies": {
     "nodemon": "^2.0.20",
     "prettier": "2.7.1"
+  },
+  "engines": {
+    "npm":"8.19.2",
+    "node":"16.18.0"
   }
 }

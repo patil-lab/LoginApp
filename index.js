@@ -78,7 +78,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   if(process.env.NODE_ENV=='production'){
     https.createServer(options, app).listen(port);
   }else{
-    app.listen(port,"localhost", () => {
+    app.listen(process.env.PORT,"localhost", () => {
+      console.log(process.env.GOOGLE_CLIENT_ID)
       console.log(" Server running!!");
     });
   }

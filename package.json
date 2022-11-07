@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "devstart": "nodemon index.js",
-    "build":"sequelize db:migrate --env production",
+    "build": "sequelize db:migrate --env production",
     "debug": "nodemon --inspect index.js",
     "format": "npx prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -39,6 +39,7 @@
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "sequelize": "^6.25.3",
+    "sequelize-cli": "^6.5.2",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0"
   },

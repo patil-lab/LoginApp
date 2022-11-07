@@ -1,6 +1,6 @@
 "use strict"
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 var db = require("../models/index");
 const User = db.Person;
 const crypto = require("crypto");

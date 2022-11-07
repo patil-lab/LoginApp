@@ -55,7 +55,9 @@ async function createUser(req, res) {
             token: token,
           });
 
-          const myUrl = new URL("http://localhost:3000");
+          
+          const myUrl = new URL(process.env.BASE_URL);
+          
           const url = myUrl + "verify?token=" + token;
           const msg = {
             to: email, // Change to your recipient

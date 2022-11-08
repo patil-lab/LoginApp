@@ -1,0 +1,9 @@
+<h1>Hey <%=user.firstName %> ! Please verify you email to log into dashboard</h1>
+
+<div>
+    <%=message%>
+</div>
+<form action="/sendEmail" method="POST">
+    <button type="submit">Resend Verification Email</button>
+    <input type="hidden" id="email" name="email" value=<%=user.email %> />
+</form>

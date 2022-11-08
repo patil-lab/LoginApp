@@ -1,0 +1,17 @@
+<h1>Hey <%=user.firstName %> ! Please reset your name</h1>
+
+<div>
+    <%=message%>
+</div>
+<form action="/resetName" method="POST">
+    <div>
+        <label for="name">First Name</label>
+        <input type="text" id="firstName" name="firstName" required>
+    </div>
+    <div>
+        <label for="name">Last Name</label>
+        <input type="text" id="lastName" name="lastName" required>
+    </div>
+
+    <button type="submit">Reset Name</button>
+</form>

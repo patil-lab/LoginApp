@@ -1,33 +1,33 @@
 {
-  "development": {
-    "username": "root",
-    "password": "root",
-    "database": "logindb",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "define":{
-      "freezeTableName":true
+    "development": {
+        "username": "root",
+        "password": "root",
+        "database": "logindb",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "define": {
+            "freezeTableName": true
+        }
+    },
+    "test": {
+        "username": "root",
+        "password": "root",
+        "database": "logindb",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
+        "createDatabaseTable": true,
+        "define": {
+            "freezeTableName": true
+        }
+    },
+    "production": {
+        "username": "b32e8159690508",
+        "password": "01ad9d40",
+        "database": "heroku_52a1aff1bb1bbdf",
+        "host": "us-cdbr-east-06.cleardb.net",
+        "dialect": "mysql",
+        "define": {
+            "freezeTableName": true
+        }
     }
-  },
-  "test": {
-    "username": "root",
-    "password": "root",
-    "database": "logindb",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "createDatabaseTable": true,
-    "define":{
-      "freezeTableName":true
-    }
-  },
-  "production": {
-    "username": "b32e8159690508",
-    "password": "01ad9d40",
-    "database": "heroku_52a1aff1bb1bbdf",
-    "host": "us-cdbr-east-06.cleardb.net",
-    "dialect": "mysql",
-    "define":{
-      "freezeTableName":true
-    }
-  }
 }

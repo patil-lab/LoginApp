@@ -1,37 +1,43 @@
 <h1>Register</h1>
 <div>
     <% errors.forEach(function (error) { %>
-        <p><%- JSON.stringify(error) %></p>       
-    <% }) %>
-    </div>
+        <p>
+            <%- JSON.stringify(error) %>
+        </p>
+        <% }) %>
+</div>
+
+<div>
+    <%=message%>
+</div>
 
 <form action="/register" method="POST">
-<div>
-    <label for="name">First Name</label>
-    <input type="text" id="firstName" name="firstName" required>
-</div>
-<div>
-    <label for="name">Last Name</label>
-    <input type="text" id="lastName" name="lastName" required>
-</div>
-<div>
-    <label for="name">Email</label>
-    <input type="email" id="email" name="email" required>
-</div>
-<div>
-    <label for="name">Password</label>
-    <input type="password" id="password" name="password" required>
-</div>
-<div>
-    <label for="name">Confirm Password</label>
-    <input type="password" id="confirm" name="confirm" required>
-</div>
-<button type="submit">Sign Up</button>
+    <div>
+        <label for="name">First Name</label>
+        <input type="text" id="firstName" name="firstName" required>
+    </div>
+    <div>
+        <label for="name">Last Name</label>
+        <input type="text" id="lastName" name="lastName" required>
+    </div>
+    <div>
+        <label for="name">Email</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+        <label for="name">Password</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+        <label for="name">Confirm Password</label>
+        <input type="password" id="confirm" name="confirm" required>
+    </div>
+    <button type="submit">Sign Up</button>
 </form>
 <a href="/login">Sign In</a>
 
-<br/>
-      <p>or</p>
-      <a href="/auth/facebook">Signup via Facebook</a>
-      <br/><br/>
-      <a href="/auth/google">Signup via Google</a>
+<br />
+<p>or</p>
+<a href="/auth/facebook">Signup via Facebook</a>
+<br /><br />
+<a href="/auth/google">Signup via Google</a>

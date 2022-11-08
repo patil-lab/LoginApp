@@ -40,7 +40,7 @@ app.use(
       return uuidv4(); // use UUIDs for session IDs
     },
     key:'session_cookie_name',
-    store:sessionStore,
+    //store:sessionStore,
     secret: "LoginAppSecret",
     saveUninitialized: false,
     resave: false,

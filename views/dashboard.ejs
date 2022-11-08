@@ -1,27 +1,22 @@
-<h1>Welcome <%=user.firstName %></h1>
+<h1>Welcome <%=user.firstName %>
+</h1>
 <div>
     <%=message%>
 </div>
 
-<form action="/reset" method="GET">
-  
-        <ul class="navbar-nav mr-auto mx-auto">
-            <li class="nav-item">
-                <a href="/reset">ReSet Password</a>
-            </li>
-        </ul>
-  
-    
-    
-    </form>
-
-    <form action="/setPassword" method="GET">
-        <ul class="navbar-nav mr-auto mx-auto">
-            <li class="nav-item">
-                <a href="/setPassword">Set Password</a>
-            </li>
-        </ul>
-        </form>
+<div>
     <div>
-        <a href="/logout">Sign Out</a>
+        <a href="/reset">ReSet Password</a>
     </div>
+
+    <div>
+        <a href="/userProfile">User Profile</a>
+    </div>
+
+    <div>
+        <a href="/userDashboard">User Dashboard</a>
+    </div>
+</div>
+<div>
+    <a href="/logout">Sign Out</a>
+</div>

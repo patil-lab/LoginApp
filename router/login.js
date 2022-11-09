@@ -18,7 +18,6 @@ const {
   resetNamePost,
 } = require("../controller/loginController");
 const { ensureAuthenticated, forwardAuthenticated } = require("../config/auth");
-const { getEventListeners } = require("events");
 const router = express.Router();
 
 router.get("/", forwardAuthenticated, homePageView);
@@ -74,7 +73,7 @@ router.get(
 );
 
 //Logout
-router.get("/logout", logoutUser);
+router.post("/logout", logoutUser);
 
 //reset pwd
 router.post("/reset", resetPost);

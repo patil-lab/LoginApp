@@ -18,5 +18,8 @@
     </div>
 </div>
 <div>
-    <a href="/logout">Sign Out</a>
+    <form action="/logout" method="POST">
+        <button type="submit">Sign Out</button>
+        <input type="hidden" id="email" name="email" value=<%=user.email %> />
+    </form>
 </div>

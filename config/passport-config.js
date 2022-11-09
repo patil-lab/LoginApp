@@ -40,6 +40,9 @@ const loginCheck = (passport) => {
                             (err, isMatch) => {
                                 if (err) throw err
                                 if (isMatch) {
+                                    user.loggedIn += 1
+                                    user.lastSession = Date.now()
+                                    user.save()
                                     return done(null, user)
                                 } else {
                                     return done(null, false, {
@@ -85,6 +88,8 @@ const loginCheck = (passport) => {
                     })
                 }
 
+                currUser.loggedIn += 1
+                currUser.save()
                 return done(null, currUser)
             }
         )
@@ -111,7 +116,7 @@ const loginCheck = (passport) => {
                             'You have previously signed up with a different signin method ',
                     })
                 }
-                return done(null, currUser, { message: 'facebook' })
+                return done(null, currUser)
             }
         )
     )

@@ -24,15 +24,15 @@ async function createUser(req, res) {
      * TODO implement regex check
      */
 
-    /*      if(!re.test(password)){
-            console.log(re.test(password))
-            console.log(password.match(re))
-            errors.push("Password must contain at least one lower character")
-            errors.push("Password must contain at least one upper character")
-            errors.push("Password must contain at least one digit character")
-            errors.push("Password must contain at least one special character")
-            errors.push("Password must contain at least one 8 character")
-        } */
+    if (!re.test(password)) {
+      console.log(re.test(password));
+      console.log(password.match(re));
+      errors.push("Password must contain at least one lower character");
+      errors.push("Password must contain at least one upper character");
+      errors.push("Password must contain at least one digit character");
+      errors.push("Password must contain at least one special character");
+      errors.push("Password must contain at least one 8 character");
+    }
 
     if (errors.length > 0) {
       res.render("register.ejs", { errors });
@@ -44,6 +44,7 @@ async function createUser(req, res) {
           errors.push("Email already used,try with different email");
           res.render("register.ejs", { errors });
         } else {
+          const token = crypto.randomBytes(64).toString("hex");
           const newUser = User.build({
             firstName: firstName,
             lastName: lastName,
@@ -52,7 +53,7 @@ async function createUser(req, res) {
             isVerified: false,
             token: token,
           });
-          const token = crypto.randomBytes(64).toString("hex");
+
           //Password Hashing
           bcrypt.genSalt(10, (err, salt) =>
             bcrypt.hash(password, salt, (err, hash) => {
@@ -120,6 +121,8 @@ async function verifyUser(req, res) {
     } else {
       user.token = null;
       user.isVerified = true;
+      user.loggedIn += 1;
+      user.lastSession = Date.now();
       const newUser = await user.save();
       req.login(newUser, (err) => {
         if (err) {
@@ -137,7 +140,8 @@ async function verifyUser(req, res) {
 }
 
 async function logoutUserPost(req, res, next) {
-  console.log(req.session);
+  const email = req.body.email;
+  updateUser(email);
   req.logOut();
   req.session.destroy((err) => res.redirect("/"));
 }
@@ -150,6 +154,8 @@ function createNewUser(profile, registrationType) {
     registrationType: registrationType,
     email: profile.emails[0].value,
     isVerified: true,
+    loggedIn: 1,
+    lastSession: Date.now(),
   });
 
   return user;
@@ -159,6 +165,12 @@ async function getUserByEmail(email) {
   return User.findOne({
     where: { email: email },
   });
+}
+
+async function updateUser(email) {
+  const user = await getUserByEmail(email);
+  user.lastSession = null;
+  user.save();
 }
 
 async function resetPassword(req, res) {

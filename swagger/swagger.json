@@ -3,13 +3,17 @@
   "info": {
     "version": "1.0.0",
     "title": "Login App",
-    "description": "Find out how your APIs work",
+    "description": "Swagger for Login APP",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     }
   },
-  "host": "localhost:3000",
+  "servers": {
+    "url": "https://localhost:3000",
+    "description": "this is my local server"
+  },
+  "host": "",
   "basePath": "/",
   "tags": [
     {
@@ -21,44 +25,106 @@
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "securityDefinitions": {
-    "ApiKeyAuth": {
+    "cookieAuth": {
       "type": "apiKey",
-      "in": "headers",
-      "name": "authorization"
+      "in": "header",
+      "name": "cookie"
     }
   },
   "paths": {
     "/register": {
       "post": {
         "summary": "Register user",
-        "tags": ["User"],
-        "description": "Login user in system",
+        "tags": ["register"],
+        "description": "Register user",
         "parameters": [
           {
             "name": "user",
             "in": "body",
             "description": "Register user",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/RegisterUser"
             }
           }
         ],
         "produces": ["application/json"],
         "responses": {
           "200": {
-            "description": "Login Success",
+            "description": "Email already used,try with different email || Passwords must match to Proceed || Please check your email to verify your account"
+          }
+        }
+      }
+    },
+    "/verify": {
+      "get": {
+        "summary": "verify email",
+        "tags": ["verify"],
+        "description": "verify email",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "verify user"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Logged In"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Login user",
+        "tags": ["login"],
+        "description": "Login user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Login user",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/LoginUser"
             }
-          },
-          "401": {
-            "description": "Login details are not valid!!"
-          },
-          "404": {
-            "description": "Email is not registered!"
-          },
-          "500": {
-            "description": "User login failed!!"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Logged In",
+            "headers": {
+              "Set-Cookie": {
+                "schema": {
+                  "type": "string",
+                  "example": "loginAppSession=abcde12345; Path=/; HttpOnly"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "summary": "Logout user",
+        "tags": ["logout"],
+        "security": {
+          "cookieAuth": []
+        },
+        "description": "Logout user",
+        "parameters": [
+          {
+            "name": "cookie name",
+            "in": "cookie",
+            "description": "logout user"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Logged Out"
           }
         }
       }
@@ -66,15 +132,50 @@
   },
 
   "definitions": {
-    "User": {
+    "RegisterUser": {
       "properties": {
-        "name": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
           "type": "string"
         },
         "email": {
           "type": "string"
         },
         "password": {
+          "type": "string"
+        },
+        "confirm": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginUser": {
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "confirm": {
           "type": "string"
         }
       }

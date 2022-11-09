@@ -14,15 +14,12 @@ async function createUser(req, res) {
     const { firstName, lastName, email, password, confirm } = req.body;
     let errors = [];
     const re = new RegExp(
-      "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/"
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/i
     );
     console.log(password, confirm);
     if (password != confirm) {
       errors.push("Passwords must match to Proceed");
     }
-    /**
-     * TODO implement regex check
-     */
 
     if (!re.test(password)) {
       console.log(re.test(password));
@@ -63,7 +60,7 @@ async function createUser(req, res) {
               newUser.password = hash;
               newUser
                 .save()
-                .then(sendEmail(req, res, token))
+                .then(sendEmail(req, res, token, "register"))
                 .catch((err) => console.log(err));
             })
           );
@@ -80,11 +77,11 @@ async function resendEmail(req, res) {
   const { email } = req.body;
   User.findOne({ where: { email: email } }).then((user) => {
     const token = user.token;
-    sendEmail(req, res, token);
+    sendEmail(req, res, token, "resend");
   });
 }
 
-async function sendEmail(req, res, token) {
+async function sendEmail(req, res, token, source) {
   const { email } = req.body;
   const senderMail = process.env.SENDER_EMAIL;
   const myUrl = new URL(process.env.BASE_URL);
@@ -101,7 +98,11 @@ async function sendEmail(req, res, token) {
     .send(msg)
     .then(() => {
       req.flash("message", " Please check your email to verify your account");
-      res.redirect("/sendEmail");
+      if (source == "register") {
+        res.redirect("/");
+      } else {
+        res.redirect("/sendEmail");
+      }
       console.log("Email sent");
     })
     .catch((error) => {
@@ -194,19 +195,21 @@ async function resetPassword(req, res) {
             req.flash("message", "New Passwords must match to proceed");
             res.redirect("/reset");
           } else {
-            /**
-             * TODO implement regex check
-             */
+            const re = new RegExp(
+              /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/i
+            );
 
-            /*      if(!re.test(password)){
-            console.log(re.test(password))
-            console.log(password.match(re))
-            errors.push("Password must contain at least one lower character")
-            errors.push("Password must contain at least one upper character")
-            errors.push("Password must contain at least one digit character")
-            errors.push("Password must contain at least one special character")
-            errors.push("Password must contain at least one 8 character")
-        } */
+            if (!re.test(password)) {
+              console.log(re.test(password));
+              console.log(password.match(re));
+              errors.push("Password must contain at least one lower character");
+              errors.push("Password must contain at least one upper character");
+              errors.push("Password must contain at least one digit character");
+              errors.push(
+                "Password must contain at least one special character"
+              );
+              errors.push("Password must contain at least one 8 character");
+            }
             bcrypt.genSalt(10, (err, salt) =>
               bcrypt.hash(newPwd, salt, (err, hash) => {
                 if (err) throw err;
@@ -244,18 +247,18 @@ async function setPwdPost(req, res) {
         );
         res.redirect("/dashboard");
       } else {
-        /**
-         * TODO implement regex check
-         */
-        /*      if(!re.test(password)){
-            console.log(re.test(password))
-            console.log(password.match(re))
-            errors.push("Password must contain at least one lower character")
-            errors.push("Password must contain at least one upper character")
-            errors.push("Password must contain at least one digit character")
-            errors.push("Password must contain at least one special character")
-            errors.push("Password must contain at least one 8 character")
-        } */
+        const re = new RegExp(
+          /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/i
+        );
+        if (!re.test(password)) {
+          console.log(re.test(password));
+          console.log(password.match(re));
+          errors.push("Password must contain at least one lower character");
+          errors.push("Password must contain at least one upper character");
+          errors.push("Password must contain at least one digit character");
+          errors.push("Password must contain at least one special character");
+          errors.push("Password must contain at least one 8 character");
+        }
         bcrypt.genSalt(10, (err, salt) =>
           bcrypt.hash(newPwd, salt, (err, hash) => {
             if (err) throw err;

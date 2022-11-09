@@ -7,7 +7,6 @@ const {
   registerUser,
   verifyEmail,
   homePageView,
-  loginUser,
   logoutUser,
   resetView,
   resetPost,
@@ -23,7 +22,7 @@ const router = express.Router();
 router.get("/", forwardAuthenticated, homePageView);
 router.get("/register", forwardAuthenticated, registerView);
 router.get("/login", forwardAuthenticated, loginView);
-router.get("/reset", ensureAuthenticated, resetView);
+
 router.post("/register", registerUser);
 router.get("/verify", verifyEmail);
 router.get("/dashboard", ensureAuthenticated, (req, res) => {
@@ -50,10 +49,13 @@ router.get(
   "/auth/google/callback",
   passport.authenticate("google", {
     failureRedirect: "/register",
-    successRedirect: "/setPassword",
     failureMessage: true,
     failureFlash: true,
-  })
+  }),
+  function (req, res) {
+    if (req.user.password != null) res.redirect("/dashboard");
+    else res.redirect("/setPassword");
+  }
 );
 
 //Facebook Oauth
@@ -67,17 +69,22 @@ router.get(
 router.get(
   "/auth/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "/setPassword",
     failureRedirect: "/register",
-  })
+    failureMessage: true,
+    failureFlash: true,
+  }),
+  function (req, res) {
+    if (req.user.password != null) res.redirect("/dashboard");
+    else res.redirect("/setPassword");
+  }
 );
 
 //Logout
 router.post("/logout", logoutUser);
 
 //reset pwd
+router.get("/reset", ensureAuthenticated, resetView);
 router.post("/reset", resetPost);
-router.post("/resetName", resetNamePost);
 
 //set Pwd
 router.get("/setPassword", setPasswordView);
@@ -97,6 +104,8 @@ router.get("/userProfile", ensureAuthenticated, (req, res) => {
 router.get("/resetName", ensureAuthenticated, (req, res) => {
   res.render("resetName.ejs", { user: req.user });
 });
+
+router.post("/resetName", resetNamePost);
 
 // userDashboard
 

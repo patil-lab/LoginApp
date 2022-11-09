@@ -19,10 +19,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const env = process.env.NODE_ENV || "development";
 const config = require("./config/config.json")[env];
 const { loginCheck } = require("./config/passport-config");
-const re = new RegExp(
-  "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/"
-);
-console.log(re.test("Putti123!@#$"));
 const options = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
@@ -41,12 +37,15 @@ app.use(
       console.log(req.sessionID);
       return uuidv4(); // use UUIDs for session IDs
     },
-    key: "session_cookie_name",
+    key: "loginAppSession",
     store: sessionStore,
     secret: "LoginAppSecret",
     saveUninitialized: false,
     resave: false,
-    //cookie: {maxAge:oneYear,httpOnly:true}
+    cookie: {
+      maxAge: oneYear,
+      httpOnly: true,
+    },
   })
 );
 
@@ -65,6 +64,7 @@ loginCheck(passport);
 
 const swaggerUi = require("swagger-ui-express"),
   swaggerDocument = require("./swagger/swagger");
+const { NONAME } = require("dns");
 
 //Routes
 app.use("/", require("./router/login"));

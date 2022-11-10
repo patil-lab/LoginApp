@@ -29,8 +29,6 @@ async function createUser(req, res) {
     }
 
     if (!re.test(password)) {
-      console.log(re.test(password));
-      console.log(password.match(re));
       errors.push("Password must contain at least one lower character");
       errors.push("Password must contain at least one upper character");
       errors.push("Password must contain at least one digit character");
@@ -270,9 +268,7 @@ async function resetPassword(req, res) {
               /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/i
             );
 
-            if (!re.test(password)) {
-              console.log(re.test(password));
-              console.log(password.match(re));
+            if (!re.test(newPwd)) {
               errors.push("Password must contain at least one lower character");
               errors.push("Password must contain at least one upper character");
               errors.push("Password must contain at least one digit character");
@@ -328,9 +324,7 @@ async function setPwdPost(req, res) {
         const re = new RegExp(
           /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/i
         );
-        if (!re.test(password)) {
-          console.log(re.test(password));
-          console.log(password.match(re));
+        if (!re.test(newPwd)) {
           errors.push("Password must contain at least one lower character");
           errors.push("Password must contain at least one upper character");
           errors.push("Password must contain at least one digit character");

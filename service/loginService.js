@@ -267,6 +267,7 @@ async function resetPassword(req, res) {
             const re = new RegExp(
               /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/i
             );
+            let errors = [];
 
             if (!re.test(newPwd)) {
               errors.push("Password must contain at least one lower character");
@@ -277,19 +278,24 @@ async function resetPassword(req, res) {
               );
               errors.push("Password must contain at least one 8 character");
             }
-            bcrypt.genSalt(10, (err, salt) =>
-              bcrypt.hash(newPwd, salt, (err, hash) => {
-                if (err) throw err;
-                user.password = hash;
-                user
-                  .save()
-                  .then(() => {
-                    req.flash("message", "Password reset successfull!");
-                    res.redirect("/dashboard");
-                  })
-                  .catch((err) => console.log(err));
-              })
-            );
+
+            if (errors.length > 0) {
+              res.render("setPassword.ejs", { errors });
+            } else {
+              bcrypt.genSalt(10, (err, salt) =>
+                bcrypt.hash(newPwd, salt, (err, hash) => {
+                  if (err) throw err;
+                  user.password = hash;
+                  user
+                    .save()
+                    .then(() => {
+                      req.flash("message", "Password reset successfull!");
+                      res.redirect("/dashboard");
+                    })
+                    .catch((err) => console.log(err));
+                })
+              );
+            }
           }
         } else {
           req.flash("message", "Old Password is incorrect");
@@ -331,19 +337,24 @@ async function setPwdPost(req, res) {
           errors.push("Password must contain at least one special character");
           errors.push("Password must contain at least one 8 character");
         }
-        bcrypt.genSalt(10, (err, salt) =>
-          bcrypt.hash(newPwd, salt, (err, hash) => {
-            if (err) throw err;
-            user.password = hash;
-            user
-              .save()
-              .then(() => {
-                req.flash("message", "Password set successfully!");
-                res.redirect("/dashboard");
-              })
-              .catch((err) => console.log(err));
-          })
-        );
+
+        if (errors.length > 0) {
+          res.render("setPassword.ejs", { errors });
+        } else {
+          bcrypt.genSalt(10, (err, salt) =>
+            bcrypt.hash(newPwd, salt, (err, hash) => {
+              if (err) throw err;
+              user.password = hash;
+              user
+                .save()
+                .then(() => {
+                  req.flash("message", "Password set successfully!");
+                  res.redirect("/dashboard");
+                })
+                .catch((err) => console.log(err));
+            })
+          );
+        }
       }
     }
   });

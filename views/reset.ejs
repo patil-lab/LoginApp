@@ -1,7 +1,16 @@
 <h1>Hey <%=user.firstName %> ! Please reset your password</h1>
 
+
 <div>
     <%=message%>
+</div>
+
+<div>
+    <% errors.forEach(function (error) { %>
+        <p>
+            <%- JSON.stringify(error) %>
+        </p>
+        <% }) %>
 </div>
 <form action="/reset" method="POST">
     <div>

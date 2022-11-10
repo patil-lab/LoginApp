@@ -280,7 +280,7 @@ async function resetPassword(req, res) {
             }
 
             if (errors.length > 0) {
-              res.render("setPassword.ejs", { errors });
+              res.render("reset.ejs", { errors, user: req.user });
             } else {
               bcrypt.genSalt(10, (err, salt) =>
                 bcrypt.hash(newPwd, salt, (err, hash) => {
@@ -330,6 +330,7 @@ async function setPwdPost(req, res) {
         const re = new RegExp(
           /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/i
         );
+        let errors = [];
         if (!re.test(newPwd)) {
           errors.push("Password must contain at least one lower character");
           errors.push("Password must contain at least one upper character");
@@ -339,7 +340,7 @@ async function setPwdPost(req, res) {
         }
 
         if (errors.length > 0) {
-          res.render("setPassword.ejs", { errors });
+          res.render("setPassword.ejs", { errors, user: req.user });
         } else {
           bcrypt.genSalt(10, (err, salt) =>
             bcrypt.hash(newPwd, salt, (err, hash) => {

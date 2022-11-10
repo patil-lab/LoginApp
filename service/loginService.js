@@ -8,6 +8,13 @@ const sgMail = require("@sendgrid/mail");
 const passport = require("passport");
 require("dotenv").config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+/**
+ *
+ * @param {firstName, lastName, email, password, confirm} req
+ * @param {email sent} res
+ *
+ * register user method
+ */
 
 async function createUser(req, res) {
   try {
@@ -51,7 +58,7 @@ async function createUser(req, res) {
             token: token,
           });
 
-          //Password Hashing
+          //Password Hashing, generate salt and hash passsword
           bcrypt.genSalt(10, (err, salt) =>
             bcrypt.hash(password, salt, (err, hash) => {
               if (err) {
@@ -73,6 +80,14 @@ async function createUser(req, res) {
   }
 }
 
+/**
+ *
+ * @param {email} req
+ * @param {email sent} res
+ *
+ * resend email to user if email not verified
+ */
+
 async function resendEmail(req, res) {
   const { email } = req.body;
   User.findOne({ where: { email: email } }).then((user) => {
@@ -80,6 +95,14 @@ async function resendEmail(req, res) {
     sendEmail(req, res, token, "resend");
   });
 }
+
+/**
+ *
+ * @param {email} req
+ * @param {email sent} res
+ * @param {token} token
+ * @param {register or resend source} source
+ */
 
 async function sendEmail(req, res, token, source) {
   const { email } = req.body;
@@ -109,6 +132,14 @@ async function sendEmail(req, res, token, source) {
       console.error(error);
     });
 }
+
+/**
+ *
+ * @param {query.toke} req
+ * @param {email verified} res
+ *
+ * verify user email
+ */
 
 async function verifyUser(req, res) {
   try {
@@ -140,12 +171,30 @@ async function verifyUser(req, res) {
   }
 }
 
+/**
+ *
+ * @param {email} req
+ * @param {user logged out} res
+ * @param {*} next
+ *
+ * logout user
+ */
+
 async function logoutUserPost(req, res, next) {
   const email = req.body.email;
   updateUser(email);
   req.logOut();
   req.session.destroy((err) => res.redirect("/"));
 }
+
+/**
+ *
+ * @param {google or fb profile} profile
+ * @param {google and fb} registrationType
+ * @returns
+ *
+ * create new user for google and facebook flow
+ */
 
 function createNewUser(profile, registrationType) {
   const user = User.create({
@@ -162,17 +211,39 @@ function createNewUser(profile, registrationType) {
   return user;
 }
 
+/**
+ *
+ * @param {*} email
+ * @returns
+ *
+ * get user by email
+ */
 async function getUserByEmail(email) {
   return User.findOne({
     where: { email: email },
   });
 }
 
+/**
+ *
+ * @param {*} email
+ *
+ * update user lastSession
+ */
+
 async function updateUser(email) {
   const user = await getUserByEmail(email);
   user.lastSession = null;
   user.save();
 }
+
+/**
+ *
+ * @param {oldPwd, newPwd, rPwd} req
+ * @param {password reset successfull} res
+ *
+ * reset password
+ */
 
 async function resetPassword(req, res) {
   const { oldPwd, newPwd, rPwd } = req.body;
@@ -233,6 +304,13 @@ async function resetPassword(req, res) {
   });
 }
 
+/**
+ *
+ * @param {newPwd,email} req
+ * @param {password set} res
+ *
+ * set Password for google and fb flow
+ */
 async function setPwdPost(req, res) {
   const { newPwd } = req.body;
   const email = req.user.email;
@@ -277,6 +355,13 @@ async function setPwdPost(req, res) {
   });
 }
 
+/**
+ *
+ * @param {firstName, lastName,email} req
+ * @param {name reset} res
+ *
+ * name reset
+ */
 async function resetNamePostCall(req, res) {
   const { firstName, lastName } = req.body;
   const email = req.user.email;

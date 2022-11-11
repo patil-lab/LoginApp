@@ -89,6 +89,7 @@ const loginCheck = (passport) => {
                 }
 
                 currUser.loggedIn += 1
+                currUser.lastSession = Date.now()
                 currUser.save()
                 return done(null, currUser)
             }
@@ -116,6 +117,9 @@ const loginCheck = (passport) => {
                             'You have previously signed up with a different signin method ',
                     })
                 }
+                currUser.loggedIn += 1
+                currUser.lastSession = Date.now()
+                currUser.save()
                 return done(null, currUser)
             }
         )

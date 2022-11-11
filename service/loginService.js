@@ -196,7 +196,7 @@ async function logoutUserPost(req, res, next) {
 
 function createNewUser(profile, registrationType) {
   const user = User.create({
-    socialUserId: profile.id,
+    socailUserId: profile.id,
     firstName: profile.name.givenName,
     lastName: profile.name.familyName,
     registrationType: registrationType,

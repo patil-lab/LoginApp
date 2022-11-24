@@ -12,8 +12,8 @@ module.exports = {
     },
     forwardAuthenticated: function (req, res, next) {
         if (req.isAuthenticated()) {
-            return res.redirect('/dashboard')
+            res.redirect('/')
         }
-        next()
+        return next()
     },
 }

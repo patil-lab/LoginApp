@@ -87,12 +87,12 @@ router.get("/reset", ensureAuthenticated, resetView);
 router.post("/reset", resetPost);
 
 //set Pwd
-router.get("/setPassword", setPasswordView);
+router.get("/setPassword", ensureAuthenticated, setPasswordView);
 
 router.post("/setPassword", setPasswordPost);
 
 //Resend email
-router.get("/sendEmail", sendEmailView);
+router.get("/sendEmail", ensureAuthenticated, sendEmailView);
 router.post("/sendEmail", sendMail);
 
 //user profile
@@ -105,11 +105,11 @@ router.get("/resetName", ensureAuthenticated, (req, res) => {
   res.render("resetName.ejs", { user: req.user });
 });
 
-router.post("/resetName", resetNamePost);
+router.post("/resetName", ensureAuthenticated, resetNamePost);
 
 // userDashboard
 
-router.get("/userDashboard", (req, res) => {
+router.get("/userDashboard", ensureAuthenticated, (req, res) => {
   res.render("userDashboard.ejs", {});
 });
 

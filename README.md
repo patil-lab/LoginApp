@@ -1,5 +1,5 @@
 
-This is a simple login project with 3 signup options email, google and facebook.
+This is a  node js project with 3 signup options email, google and facebook.
 
 only LoggedIn users can see the user dashboard which is made in retool . 
 
